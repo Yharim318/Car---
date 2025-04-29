@@ -36,7 +36,7 @@ public class TeleopCar extends InstantCommand {
     else
       car.setNeutralValue(NeutralModeValue.Coast);
 
-    car.setLeftVelocity(wantedL);
-    car.setRightVelocity(wantedR);
+    car.addLeftVoltage(wantedL);
+    car.addRightVoltage(wantedR);
   }
 }

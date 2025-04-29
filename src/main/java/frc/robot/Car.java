@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -20,10 +19,10 @@ public class Car extends SubsystemBase {
   TalonFX right2;
   TalonFXConfiguration configL = new TalonFXConfiguration();
   TalonFXConfiguration configR = new TalonFXConfiguration();
-  VelocityVoltage PID = new VelocityVoltage(0);
+  double speed = 0;
   double wantedSpeedLeft = 0;
   double wantedSpeedRight = 0;
-  public static double maxSpeed = 200;
+  public static double maxSpeed = 12;
   public Car() {
     configL.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     configL.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -50,16 +49,22 @@ public class Car extends SubsystemBase {
 
   @Override
   public void periodic() {
-    left1.setControl(PID.withVelocity(wantedSpeedLeft));
-    left2.setControl(PID.withVelocity(wantedSpeedLeft));
-    right1.setControl(PID.withVelocity(wantedSpeedRight));
-    right2.setControl(PID.withVelocity(wantedSpeedRight));
+    left1.setVoltage(speed);
+    left2.setVoltage(speed);
+    right1.setVoltage(speed);
+    right2.setVoltage(speed);
   }
-  public void setLeftVelocity(double v){
+  public void setLeftVoltage(double v){
     wantedSpeedLeft = v;
   }
-  public void setRightVelocity(double v){
+  public void setRightVoltage(double v){
     wantedSpeedRight = v;
+  }
+  public void addLeftVoltage(double v){
+    wantedSpeedLeft += v * Robot.kDefaultPeriod;
+  }
+  public void addRightVoltage(double v ){
+    wantedSpeedRight += v * Robot.kDefaultPeriod;
   }
   public double getLeftVelocity(){
     return left1.getVelocity().getValueAsDouble();

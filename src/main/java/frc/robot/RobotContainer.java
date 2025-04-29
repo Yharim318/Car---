@@ -12,7 +12,14 @@ public class RobotContainer {
   Car car = new Car();
   XboxController controller = new XboxController(0);
   public RobotContainer() {
-    car.setDefaultCommand(new TeleopCar(car, () -> controller.getRightX(), () -> controller.getRightY(), ()-> controller.getBButton()));
+    car.setDefaultCommand(
+    new TeleopCar(
+        car, 
+        () -> controller.getLeftX(), 
+        () -> controller.getRightTriggerAxis() - controller.getRightTriggerAxis(), 
+        () -> controller.getBButton()
+      )
+    );
     configureBindings();
   }
 
