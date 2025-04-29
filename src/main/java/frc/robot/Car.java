@@ -9,6 +9,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Relay.*;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Car extends SubsystemBase {
@@ -19,6 +22,8 @@ public class Car extends SubsystemBase {
   TalonFX right2;
   TalonFXConfiguration configL = new TalonFXConfiguration();
   TalonFXConfiguration configR = new TalonFXConfiguration();
+  AnalogInput pressure = new AnalogInput(0);
+  Relay output = new Relay(0);
   double speed = 0;
   double wantedSpeedLeft = 0;
   double wantedSpeedRight = 0;
@@ -26,15 +31,9 @@ public class Car extends SubsystemBase {
   public Car() {
     configL.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     configL.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    configL.Slot0.kP = 1;
-    configL.Slot0.kI = 0;
-    configL.Slot0.kD = 0;
 
     configR.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     configR.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    configR.Slot0.kP = 1;
-    configR.Slot0.kI = 0;
-    configR.Slot0.kD = 0;
 
     left1 = new TalonFX(0);
     left2 = new TalonFX(0);
@@ -77,5 +76,19 @@ public class Car extends SubsystemBase {
     left2.setNeutralMode(value);
     right1.setNeutralMode(value);
     right2.setNeutralMode(value);
+  }
+  public double sensorToPsi(double value){
+    return 250 * (value/5) - 25; // Change based on sensor 
+  }
+  void toggleOutput(){
+    if (output.get() == Value.kOn){
+      output.set(Value.kOff);
+    }
+    else{
+      output.set(Value.kOn);
+    }
+  }
+  void toggleOutput(Value value){
+    output.set(value);
   }
 }

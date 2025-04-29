@@ -14,10 +14,11 @@ public class TeleopCar extends InstantCommand {
   BooleanSupplier brake;
   double wantedL;
   double wantedR;
+  boolean currentBrakeValue;
   public TeleopCar(Car car_, DoubleSupplier x_, DoubleSupplier y_, BooleanSupplier brake_) {
     addRequirements(car_);
     car = car_;
-
+    currentBrakeValue = false;
     x = x_;
     y = y_;
     brake = brake_;
@@ -31,9 +32,9 @@ public class TeleopCar extends InstantCommand {
 
     wantedL = Car.maxSpeed * (yVal - 0.5 * xVal);
     wantedR = Car.maxSpeed * (yVal + 0.5 * xVal);
-    if(brakeVal)
+    if(brakeVal && !currentBrakeValue)
       car.setNeutralValue(NeutralModeValue.Brake);
-    else
+    else if(!brakeVal && currentBrakeValue)
       car.setNeutralValue(NeutralModeValue.Coast);
 
     car.addLeftVoltage(wantedL);
